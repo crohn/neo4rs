@@ -54,8 +54,8 @@ impl Manager for ConnectionManager {
         Connection::new(&self.info).await
     }
 
-    async fn recycle(&self, obj: &mut Self::Type, _: &Metrics) -> RecycleResult<Self::Error> {
-        trace!("recycling connection");
+    async fn recycle(&self, obj: &mut Self::Type, metrics: &Metrics) -> RecycleResult<Self::Error> {
+        trace!("recycling connection, {:?}", metrics);
         Ok(obj.reset().await?)
     }
 }
