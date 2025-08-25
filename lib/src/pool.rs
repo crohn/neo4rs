@@ -8,7 +8,7 @@ use crate::{
 };
 use backon::ExponentialBuilder;
 use deadpool::managed::{Manager, Metrics, Object, Pool, RecycleResult};
-use log::{info, trace};
+use log::{debug, info};
 
 pub type ConnectionPool = Pool<ConnectionManager>;
 pub type ManagedConnection = Object<ConnectionManager>;
@@ -50,12 +50,12 @@ impl Manager for ConnectionManager {
     type Error = Error;
 
     async fn create(&self) -> Result<Self::Type, Self::Error> {
-        trace!("creating new connection");
+        debug!("creating new connection");
         Connection::new(&self.info).await
     }
 
     async fn recycle(&self, obj: &mut Self::Type, metrics: &Metrics) -> RecycleResult<Self::Error> {
-        trace!("recycling connection, {:?}", metrics);
+        debug!("recycling connection, {:?}", metrics);
         Ok(obj.reset().await?)
     }
 }
